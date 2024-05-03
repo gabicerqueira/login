@@ -24,9 +24,11 @@ export default function Acesso() {
     async function fazerLogin() {
         try {
             const userData = await AsyncStorage.getItem('userData');
+            
 
             if (userData !== null) {
                 const { email: emailSalvo, senha: senhaSalva } = JSON.parse(userData);
+                
                 if (email === emailSalvo && senha === senhaSalva) {
                     alert('Login realizado com sucesso!');
                 } else {

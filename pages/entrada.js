@@ -17,27 +17,30 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function Acesso() {
 
     const navigation = useNavigation();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
 
-    const handleLogin = async () => {
+    const [email, defEmail] = useState("");
+    const [senha, defSenha] = useState("");
+
+    async function fazerLogin() {
         try {
             const userData = await AsyncStorage.getItem('userData');
+
             if (userData !== null) {
-                const { email: savedEmail, password: savedPassword } = JSON.parse(userData);
-                if (email === savedEmail && password === savedPassword) {
-                    alert('Login bem-sucedido!');
+                const { email: emailSalvo, senha: senhaSalva } = JSON.parse(userData);
+                if (email === emailSalvo && senha === senhaSalva) {
+                    alert('Login realizado com sucesso!');
                 } else {
-                    alert('Credenciais inválidas. Por favor, verifique seu e-mail e senha.');
+                    alert('Credenciais inválidas');
                 }
             } else {
                 alert('Nenhum dado de cadastro encontrado. Por favor, cadastre-se primeiro.');
             }
-        } catch (error) {
-            console.error('Erro ao fazer login:', error);
-            alert('Erro ao fazer login. Por favor, tente novamente.');
         }
-    };
+        catch (erro) {
+            alert("Erro ao realizar login", erro)
+            return [];
+        }
+    }
 
 
     return (
@@ -54,18 +57,18 @@ export default function Acesso() {
                             placeholder='Digite um email...'
                             style={styles.input}
                             value={email}
-                            onChangeText={setEmail}
+                            onChangeText={defEmail}
                         />
                         <Text style={styles.title}>Senha</Text>
                         <TextInput
                             placeholder='Sua senha'
                             style={styles.input}
                             secureTextEntry
-                            value={password}
-                            onChangeText={setPassword}
+                            value={senha}
+                            onChangeText={defSenha}
                         />
-                        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                            <Text style={styles.buttonText}>Acessar</Text>
+                        <TouchableOpacity style={styles.botao} onPress={fazerLogin}>
+                            <Text style={styles.textoBotao}>Acessar</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.buttonRegister} onPress={() => navigation.navigate('cadastro')}>
                             <Text style={styles.registerText}>Não possui uma conta? Cadastre-se</Text>
@@ -113,7 +116,7 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         fontSize: 16
     },
-    button: {
+    botao: {
         backgroundColor: '#880000',
         width: '100%',
         borderRadius: 4,
@@ -122,7 +125,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    buttonText: {
+    textoBotao: {
         color: "#FFF",
         fontSize: 18,
         fontWeight: 'bold'

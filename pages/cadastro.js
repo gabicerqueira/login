@@ -1,46 +1,47 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Cadastro() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
 
-    const handleCadastro = async () => {
+    const [email, defEmail] = useState("");
+    const [senha, defSenha] = useState("");
+
+
+    async function armazenarCadastro() {
         try {
-            if (email.trim() === '' || password.trim() === '') {
-                alert('Por favor, preencha todos os campos.');
-                return;
+            if (email === "" | senha === "") {
+                alert("Preencha todos os campos");
+            } else {
+                await AsyncStorage.setItem('userData', JSON.stringify({email, senha}));
+                defEmail();
+                defSenha();
+
+                alert("Credenciais cadastradas!")
             }
 
-            await AsyncStorage.setItem('userData', JSON.stringify({ email, password }));
-            setEmail('');
-            setPassword('');
-            alert('Cadastro realizado com sucesso!');
-        } catch (error) {
-            console.error('Erro ao salvar os dados:', error);
-            alert('Erro ao salvar os dados. Por favor, tente novamente.');
+        } catch (erro) {
+            alert("Erro ao realizar cadastro", erro)
         }
-    };
+    }
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Cadastro</Text>
+            <Text style={styles.titulo}>Cadastro</Text>
             <TextInput
                 style={styles.input}
                 placeholder="E-mail"
                 value={email}
-                onChangeText={setEmail}
+                onChangeText={defEmail}
             />
             <TextInput
                 style={styles.input}
                 placeholder="Senha"
-                secureTextEntry={true}
-                value={password}
-                onChangeText={setPassword}
+                value={senha}
+                onChangeText={defSenha}
             />
-            <TouchableOpacity style={styles.button} onPress={handleCadastro}>
-                <Text style={styles.buttonText}>Cadastrar</Text>
+            <TouchableOpacity style={styles.botao} onPress={armazenarCadastro}>
+                <Text style={styles.textoBotao}>Cadastrar</Text>
             </TouchableOpacity>
         </View>
     );
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 20,
     },
-    title: {
+    titulo: {
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
@@ -67,14 +68,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         marginBottom: 20,
     },
-    button: {
+    botao: {
         backgroundColor: '#880000',
         width: '100%',
         borderRadius: 5,
         paddingVertical: 10,
         alignItems: 'center',
     },
-    buttonText: {
+    textoBotao: {
         color: '#fff',
         fontSize: 18,
         fontWeight: 'bold',

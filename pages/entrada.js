@@ -22,11 +22,9 @@ export default function Acesso() {
 
     const handleLogin = async () => {
         try {
-            // Recuperar os dados de cadastro salvos no AsyncStorage
             const userData = await AsyncStorage.getItem('userData');
             if (userData !== null) {
                 const { email: savedEmail, password: savedPassword } = JSON.parse(userData);
-                // Comparar os dados de login com os dados de cadastro
                 if (email === savedEmail && password === savedPassword) {
                     alert('Login bem-sucedido!');
                 } else {
